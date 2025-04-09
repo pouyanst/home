@@ -1,74 +1,37 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>کنترل LED</title>
-  <style>
-    /* CSS */
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f4f4f4;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Control</title>
 
-    .container {
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 30px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .led-button {
-      width: 100px;
-      height: 100px;
-      background-color: #000; /* مشکی برای LED خاموش */
-      color: white;
-      border: none;
-      border-radius: 25px; /* گوشه‌های گرد */
-      font-size: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      outline: none;
-    }
-
-    .led-button.active {
-      background-color: #007bff; /* آبی برای LED روشن */
-    }
-
-    .led-button:focus {
-      outline: none;
-    }
-  </style>
+    <!-- پشتیبانی از نمایش به صورت اپلیکیشن -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <div class="container">
-    <h1>کنترل LED</h1>
-    <button id="ledButton" class="led-button" onclick="toggleLED()">LED</button>
-  </div>
+    <h1>کنترل چراغ ESP32</h1>
+    <button id="toggleButton">روشن کردن چراغ</button>
 
-  <script>
-    // JavaScript
+    <script>
+        let lightStatus = false; // چراغ خاموش است به طور پیش‌فرض
 
-    // تابع برای تغییر وضعیت LED
-    function toggleLED() {
-      var button = document.getElementById('ledButton');
-      
-      // تغییر رنگ دکمه به صورت مشکی (خاموش) یا آبی (روشن)
-      button.classList.toggle('active');
-      
-      // ارسال درخواست برای تغییر وضعیت LED
-      fetch('/toggle') // فرستادن درخواست به سرور ESP32 برای تغییر وضعیت LED
-        .then(response => response.text())
-        .then(data => console.log(data));
-    }
-  </script>
+        document.getElementById('toggleButton').onclick = function() {
+            lightStatus = !lightStatus; // تغییر وضعیت چراغ
+            const buttonText = lightStatus ? 'خاموش کردن چراغ' : 'روشن کردن چراغ';
+            this.textContent = buttonText;
+
+            fetch(`http://192.168.0.105/toggle_light?status=${lightStatus ? 1 : 0}`) // ارسال درخواست به ESP32
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+    </script>
 </body>
 </html>
