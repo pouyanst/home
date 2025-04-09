@@ -1,37 +1,73 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>اپ من</title>
-
-  <!-- برای iOS -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="اپ من" />
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-
-  <!-- فایل Manifest -->
-  <link rel="manifest" href="/manifest.json" />
-
-  <!-- استایل ساده -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کنترل LED</title>
   <style>
+    /* CSS */
     body {
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    .container {
       text-align: center;
-      margin-top: 50px;
+    }
+
+    h1 {
+      font-size: 30px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .led-button {
+      width: 100px;
+      height: 100px;
+      background-color: #000; /* مشکی برای LED خاموش */
+      color: white;
+      border: none;
+      border-radius: 25px; /* گوشه‌های گرد */
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      outline: none;
+    }
+
+    .led-button.active {
+      background-color: #007bff; /* آبی برای LED روشن */
+    }
+
+    .led-button:focus {
+      outline: none;
     }
   </style>
 </head>
 <body>
-  <h1>سلام! این یک وب اپ هست</h1>
-  <p>میتونی منو به هوم‌اسکرین اضافه کنی!</p>
+  <div class="container">
+    <h1>کنترل LED</h1>
+    <button id="ledButton" class="led-button" onclick="toggleLED()">LED</button>
+  </div>
 
   <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(reg => console.log('Service Worker Registered:', reg))
-        .catch(err => console.error('Service Worker Error:', err));
+    // JavaScript
+
+    // تابع برای تغییر وضعیت LED
+    function toggleLED() {
+      var button = document.getElementById('ledButton');
+      
+      // تغییر رنگ دکمه به صورت مشکی (خاموش) یا آبی (روشن)
+      button.classList.toggle('active');
+      
+      // ارسال درخواست برای تغییر وضعیت LED
+      fetch('/toggle') // فرستادن درخواست به سرور ESP32 برای تغییر وضعیت LED
+        .then(response => response.text())
+        .then(data => console.log(data));
     }
   </script>
 </body>
