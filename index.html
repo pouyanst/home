@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>اپ من</title>
+
+  <!-- برای iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="اپ من" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+  <!-- فایل Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- استایل ساده -->
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <h1>سلام! این یک وب اپ هست</h1>
+  <p>میتونی منو به هوم‌اسکرین اضافه کنی!</p>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service Worker Registered:', reg))
+        .catch(err => console.error('Service Worker Error:', err));
+    }
+  </script>
+</body>
+</html>
